@@ -1,9 +1,5 @@
 package ProgrammersPractice;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 /*
 * N으로 표현
 * https://programmers.co.kr/learn/courses/30/lessons/42895?language=java
@@ -11,44 +7,36 @@ import java.util.Set;
 * */
 
 public class N으로_표현 {
+    int answer = 9;
     public int solution(int N, int number) {
-        int answer = 0;
-        Set<Integer>[] sets = new Set[9];
-        int t = N;
+        dfs(0, 0, N, number);
 
-        // 연산 없이 숫자만
-        for (int i = 1; i < 9; i++) {
-            sets[i] = new HashSet<>();
-            sets[i].add(t);
-            t = t * 10 + N;
+        if (answer > 8) {
+            return -1;
         }
 
-        for (int i = 1; i < 9; i++) {
-            for (int k = 1; k < i; k++) {
-                for (Integer a : sets[k]) {
-                    for (Integer b : sets[i - k]) {
-                        sets[i].add(a + b);
-                        sets[i].add(a - b);
-                        sets[i].add(b - a);
-                        sets[i].add(a * b);
-                        if (b != 0) {
-                            sets[i].add(a / b);
-                        }
-                        if (a != 0) {
-                            sets[i].add(b / a);
-                        }
-                    }
-                }
-            }
-        }
-
-        System.out.println(Arrays.toString(Arrays.stream(sets).toArray()));
-        for (int i = 1; i < 9; i++) {
-            if (sets[i].contains(number)) {
-                answer = i;
-                break;
-            }
-        }
         return answer;
+    }
+
+    void dfs(int value, int count, int N, int number) {
+        if (count > 8) { // 최대 8 조건
+            return;
+        }
+
+        if (value == number) { // number와 같을 조건 후 최소값 저장
+            answer = Math.min(answer, count);
+            return;
+        }
+
+        int tempN = N;
+        for (int i = 0; i < 8 - count; i++) { // N을 N, NN, NNN, NNNN, NNNNN 이렇게 사용한다.
+            int tempCount = count + i + 1;
+            dfs(value + tempN, tempCount, N, number);
+            dfs(value - tempN, tempCount, N, number);
+            dfs(value / tempN, tempCount, N, number);
+            dfs(value * tempN, tempCount, N, number);
+
+            tempN = (tempN * 10) + N;
+        }
     }
 }
