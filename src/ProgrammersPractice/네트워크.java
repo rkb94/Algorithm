@@ -27,11 +27,15 @@ public class 네트워크 {
         return answer;
     }
 
-    private void dfs(int start, int[][] computers) {
-        visit[start] = true;
-        for (int i = 0; i < computers.length; i++) {
-            if (!visit[i] && computers[start][i] == 1) {
-                dfs(i, computers);
+    private void dfs(int target, int[][] computers) {
+        if (visit[target]) {
+            return;
+        }
+
+        visit[target] = true;
+        for (int nextTarget = 0; nextTarget < computers.length; nextTarget++) {
+            if (computers[target][nextTarget] == 1) {
+                dfs(nextTarget, computers);
             }
         }
     }
